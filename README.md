@@ -1,3 +1,9 @@
+NOTICE FOR THIS FORK
+======
+
+This is my first project and I have no idea what I am doing. If you for some reason decide you want to use this, expect things to be messy and/or broken
+
+
 COLMAP
 ======
 
