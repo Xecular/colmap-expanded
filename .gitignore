@@ -19,6 +19,7 @@ benchmark/reconstruction/data/
 benchmark/reconstruction/runs/
 doc/_build
 vcpkg_installed/
+dev*/
 
 # Compiled Object files
 *.slo

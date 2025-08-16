@@ -367,6 +367,7 @@ set(COLMAP_EXPORT_LIBS
     colmap_geometry
     colmap_image
     colmap_math
+    colmap_ml
     colmap_mvs
     colmap_optim
     colmap_retrieval

@@ -101,10 +101,8 @@ void ThemeManager::SetTheme(ThemeType theme) {
       break;
   }
 
-  LoadStylesheet();
-  SaveThemePreference();
-  
-  emit ThemeChanged(theme);
+           LoadStylesheet();
+         SaveThemePreference();
 }
 
 ThemeType ThemeManager::GetCurrentTheme() const {

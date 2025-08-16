@@ -1,0 +1,83 @@
+# Cursor Configuration for COLMAP Visual Studio Solution
+
+# Enable Visual Studio solution support
+cursor.visualStudio.enabled = true
+
+# Set Visual Studio installation path
+cursor.visualStudio.installationPath = "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community"
+
+# Enable build integration
+cursor.build.enabled = true
+cursor.build.defaultBuildSystem = "visualstudio"
+
+# Configure build tasks
+cursor.build.tasks = {
+  "build-release": {
+    "command": "msbuild",
+    "args": ["COLMAP.sln", "/p:Configuration=Release", "/p:Platform=x64", "/m:4"],
+    "group": "build",
+    "presentation": {
+      "echo": true,
+      "reveal": "always",
+      "focus": false,
+      "panel": "shared"
+    }
+  },
+  "build-debug": {
+    "command": "msbuild",
+    "args": ["COLMAP.sln", "/p:Configuration=Debug", "/p:Platform=x64", "/m:4"],
+    "group": "build",
+    "presentation": {
+      "echo": true,
+      "reveal": "always",
+      "focus": false,
+      "panel": "shared"
+    }
+  },
+  "clean": {
+    "command": "msbuild",
+    "args": ["COLMAP.sln", "/t:Clean", "/p:Configuration=Release", "/p:Platform=x64"],
+    "group": "build",
+    "presentation": {
+      "echo": true,
+      "reveal": "always",
+      "focus": false,
+      "panel": "shared"
+    }
+  }
+}
+
+# Enable IntelliSense for C++
+cursor.intelliSense.enabled = true
+cursor.intelliSense.cppStandard = "c++17"
+
+# Configure debugging
+cursor.debug.enabled = true
+cursor.debug.configurations = {
+  "COLMAP Debug": {
+    "type": "cppvsdbg",
+    "request": "launch",
+    "program": "${workspaceFolder}/build/src/colmap/exe/Release/colmap.exe",
+    "args": [],
+    "stopAtEntry": false,
+    "cwd": "${workspaceFolder}",
+    "environment": [],
+    "console": "externalTerminal"
+  }
+}
+
+# File associations
+cursor.fileAssociations = {
+  "*.sln": "visualstudio",
+  "*.vcxproj": "visualstudio",
+  "*.vcxproj.filters": "visualstudio"
+}
+
+# Enable CMake integration
+cursor.cmake.enabled = true
+cursor.cmake.buildDirectory = "${workspaceFolder}/build"
+cursor.cmake.configureSettings = {
+  "CMAKE_TOOLCHAIN_FILE": "C:/dev/vcpkg/scripts/buildsystems/vcpkg.cmake",
+  "CMAKE_BUILD_TYPE": "Release",
+  "GUI_ENABLED": "ON"
+}

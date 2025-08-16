@@ -29,72 +29,65 @@
 
 #pragma once
 
-#include <QApplication>
-#include <QColor>
-#include <QString>
+#include "colmap/ml/ml_manager.h"
+
+#include <QComboBox>
+#include <QGroupBox>
+#include <QLabel>
+#include <QPushButton>
+#include <QTableWidget>
 #include <QWidget>
 
 namespace colmap {
 
-enum class ThemeType {
-  LIGHT,
-  DARK,
-  SYSTEM  // Follow system preference
-};
+class MLModelWidget : public QWidget {
+  Q_OBJECT
 
-class ThemeManager {
  public:
-  static ThemeManager& Instance();
+  explicit MLModelWidget(QWidget* parent = nullptr);
 
-  // Theme management
-  void SetTheme(ThemeType theme);
-  ThemeType GetCurrentTheme() const;
-  bool IsDarkTheme() const;
+  void RefreshModelList();
+  void UpdateModelInfo();
 
-  // Color palette access
-  QColor GetColor(const QString& color_name) const;
-  QString GetStylesheet() const;
-
-  // Widget theming
-  void ApplyThemeToWidget(QWidget* widget);
-  void ApplyThemeToApplication(QApplication* app);
-
-  // Settings persistence
-  void SaveThemePreference();
-  void LoadThemePreference();
+ private slots:
+  void LoadSelectedModel();
+  void UnloadSelectedModel();
+  void UnloadAllModels();
+  void SetDefaultDevice();
+  void ClearCache();
+  void ShowModelInfo();
+  void DownloadModel();
 
  private:
-  ThemeManager();
-  ~ThemeManager() = default;
-  ThemeManager(const ThemeManager&) = delete;
-  ThemeManager& operator=(const ThemeManager&) = delete;
+  void CreateWidgets();
+  void CreateLayout();
+  void CreateConnections();
+  void UpdateDeviceComboBox();
+  void UpdateModelTable();
 
-  void InitializeColorPalettes();
-  void LoadStylesheet();
-  QString GetStylesheetPath() const;
+  // Widgets
+  QGroupBox* model_group_;
+  QTableWidget* model_table_;
+  QPushButton* load_button_;
+  QPushButton* unload_button_;
+  QPushButton* unload_all_button_;
+  QPushButton* refresh_button_;
+  QPushButton* info_button_;
 
-  ThemeType current_theme_;
-  QString current_stylesheet_;
-  
-  // Color palettes for different themes
-  struct ColorPalette {
-    QColor primary;
-    QColor secondary;
-    QColor accent;
-    QColor background;
-    QColor surface;
-    QColor text_primary;
-    QColor text_secondary;
-    QColor border;
-    QColor highlight;
-    QColor error;
-    QColor warning;
-    QColor success;
-  };
+  QGroupBox* device_group_;
+  QComboBox* device_combo_;
+  QPushButton* set_device_button_;
+  QLabel* device_status_label_;
 
-  ColorPalette light_palette_;
-  ColorPalette dark_palette_;
-  ColorPalette* current_palette_;
+  QGroupBox* cache_group_;
+  QLabel* cache_size_label_;
+  QPushButton* clear_cache_button_;
+  QPushButton* download_button_;
+
+  QGroupBox* info_group_;
+  QLabel* total_models_label_;
+  QLabel* loaded_models_label_;
+  QLabel* cache_directory_label_;
 };
 
 }  // namespace colmap

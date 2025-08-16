@@ -78,6 +78,15 @@ void BundleAdjustmentController::Run() {
     return;
   }
 
+  LOG(INFO) << "Bundle Adjustment Configuration:";
+  LOG(INFO) << "  - Registered Images: " << reconstruction_->NumRegFrames();
+  LOG(INFO) << "  - Total Points3D: " << reconstruction_->NumPoints3D();
+  LOG(INFO) << "  - Total Observations: " << reconstruction_->NumObservations();
+  LOG(INFO) << "  - Max Iterations: " << options_.bundle_adjustment->solver_options.max_num_iterations;
+  LOG(INFO) << "  - Function Tolerance: " << options_.bundle_adjustment->solver_options.function_tolerance;
+  LOG(INFO) << "  - Gradient Tolerance: " << options_.bundle_adjustment->solver_options.gradient_tolerance;
+  LOG(INFO) << "  - Parameter Tolerance: " << options_.bundle_adjustment->solver_options.parameter_tolerance;
+
   // Avoid degeneracies in bundle adjustment.
   ObservationManager(*reconstruction_).FilterObservationsWithNegativeDepth();
 
@@ -98,11 +107,18 @@ void BundleAdjustmentController::Run() {
   ba_config.FixGauge(BundleAdjustmentGauge::TWO_CAMS_FROM_WORLD);
 
   // Run bundle adjustment.
+  LOG(INFO) << "Starting bundle adjustment optimization...";
   std::unique_ptr<BundleAdjuster> bundle_adjuster = CreateDefaultBundleAdjuster(
       std::move(ba_options), std::move(ba_config), *reconstruction_);
   bundle_adjuster->Solve();
   reconstruction_->UpdatePoint3DErrors();
 
+  LOG(INFO) << "Bundle adjustment completed successfully!";
+  LOG(INFO) << "Final reconstruction statistics:";
+  LOG(INFO) << "  - Registered Images: " << reconstruction_->NumRegFrames();
+  LOG(INFO) << "  - Total Points3D: " << reconstruction_->NumPoints3D();
+  LOG(INFO) << "  - Total Observations: " << reconstruction_->NumObservations();
+  
   run_timer.PrintMinutes();
 }
 

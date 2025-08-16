@@ -41,6 +41,7 @@
 #include "colmap/ui/license_widget.h"
 #include "colmap/ui/log_widget.h"
 #include "colmap/ui/match_matrix_widget.h"
+#include "colmap/ui/ml_model_widget.h"
 #include "colmap/ui/model_viewer_widget.h"
 #include "colmap/ui/project_widget.h"
 #include "colmap/ui/reconstruction_manager_widget.h"
@@ -94,6 +95,7 @@ class MainWindow : public QMainWindow {
   void FeatureExtraction();
   void FeatureMatching();
   void DatabaseManagement();
+  void MLModels();
 
   void AutomaticReconstruction();
 
@@ -133,6 +135,8 @@ class MainWindow : public QMainWindow {
   void ResetOptions();
   void SetLogLevel();
 
+
+
   void About();
   void Documentation();
   void Support();
@@ -149,7 +153,7 @@ class MainWindow : public QMainWindow {
   void InitializeTheme();
   void SwitchToLightTheme();
   void SwitchToDarkTheme();
-  void OnThemeChanged(ThemeType new_theme);
+  void UpdateThemeActionStates();
 
   OptionManager options_;
 
@@ -173,6 +177,7 @@ class MainWindow : public QMainWindow {
   ReconstructionManagerWidget* reconstruction_manager_widget_;
   ReconstructionStatsWidget* reconstruction_stats_widget_;
   MatchMatrixWidget* match_matrix_widget_;
+  MLModelWidget* ml_model_widget_;
   LicenseWidget* license_widget_;
   ThreadControlWidget* thread_control_widget_;
 
@@ -203,6 +208,7 @@ class MainWindow : public QMainWindow {
   QAction* action_feature_extraction_;
   QAction* action_feature_matching_;
   QAction* action_database_management_;
+  QAction* action_ml_models_;
 
   QAction* action_automatic_reconstruction_;
 
@@ -242,6 +248,8 @@ class MainWindow : public QMainWindow {
   // Theme actions
   QAction* action_light_theme_;
   QAction* action_dark_theme_;
+
+
 
   std::vector<QAction*> blocking_actions_;
 

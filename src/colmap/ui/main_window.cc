@@ -49,7 +49,7 @@ MainWindow::MainWindow(const OptionManager& options)
   // NOLINTNEXTLINE(concurrency-mt-unsafe)
   std::setlocale(LC_NUMERIC, "C");
 
-  resize(1024, 600);
+  resize(1280, 800);
   UpdateWindowTitle();
 
   CreateWidgets();
@@ -136,6 +136,7 @@ void MainWindow::CreateWidgets() {
       new ReconstructionManagerWidget(this, reconstruction_manager_);
   reconstruction_stats_widget_ = new ReconstructionStatsWidget(this);
   match_matrix_widget_ = new MatchMatrixWidget(this, &options_);
+  ml_model_widget_ = new MLModelWidget(this);
   license_widget_ = new LicenseWidget(this);
 
   dock_log_widget_ = new QDockWidget("Log", this);
@@ -252,6 +253,16 @@ void MainWindow::CreateActions() {
           this,
           &MainWindow::DatabaseManagement);
   blocking_actions_.push_back(action_database_management_);
+
+  action_ml_models_ =
+      new QAction(QIcon(":/media/feature-matching.png"),  // Using existing icon for now
+                  tr("ML Models"),
+                  this);
+  connect(action_ml_models_,
+          &QAction::triggered,
+          this,
+          &MainWindow::MLModels);
+  blocking_actions_.push_back(action_ml_models_);
 
   //////////////////////////////////////////////////////////////////////////////
   // Reconstruction actions
@@ -481,6 +492,8 @@ void MainWindow::CreateActions() {
   connect(
       action_license_, &QAction::triggered, license_widget_, &QTextEdit::show);
 
+
+
   //////////////////////////////////////////////////////////////////////////////
   // Theme actions
   //////////////////////////////////////////////////////////////////////////////
@@ -523,6 +536,7 @@ void MainWindow::CreateMenus() {
   preprocessing_menu->addAction(action_feature_extraction_);
   preprocessing_menu->addAction(action_feature_matching_);
   preprocessing_menu->addAction(action_database_management_);
+  preprocessing_menu->addAction(action_ml_models_);
   menuBar()->addAction(preprocessing_menu->menuAction());
 
   QMenu* reconstruction_menu = new QMenu(tr("Reconstruction"), this);
@@ -594,6 +608,7 @@ void MainWindow::CreateToolbar() {
   preprocessing_toolbar_->addAction(action_feature_extraction_);
   preprocessing_toolbar_->addAction(action_feature_matching_);
   preprocessing_toolbar_->addAction(action_database_management_);
+  preprocessing_toolbar_->addAction(action_ml_models_);
   preprocessing_toolbar_->setIconSize(QSize(16, 16));
 
   reconstruction_toolbar_ = addToolBar(tr("Reconstruction"));
@@ -1050,6 +1065,11 @@ void MainWindow::DatabaseManagement() {
   }
 }
 
+void MainWindow::MLModels() {
+  ml_model_widget_->show();
+  ml_model_widget_->raise();
+}
+
 void MainWindow::AutomaticReconstruction() {
   automatic_reconstruction_widget_->show();
   automatic_reconstruction_widget_->raise();
@@ -1386,6 +1406,8 @@ void MainWindow::SetLogLevel() {
   FLAGS_v = log_level;
 }
 
+
+
 void MainWindow::About() {
   QMessageBox::about(
       this,
@@ -1465,12 +1487,6 @@ void MainWindow::UpdateWindowTitle() {
 }
 
 void MainWindow::InitializeTheme() {
-  // Connect to theme manager signals
-  connect(&ThemeManager::Instance(),
-          &ThemeManager::ThemeChanged,
-          this,
-          &MainWindow::OnThemeChanged);
-
   // Apply current theme to application
   ThemeManager::Instance().ApplyThemeToApplication(qApp);
 
@@ -1480,13 +1496,6 @@ void MainWindow::InitializeTheme() {
 
 void MainWindow::SwitchToLightTheme() {
   ThemeManager::Instance().SetTheme(ThemeType::LIGHT);
-}
-
-void MainWindow::SwitchToDarkTheme() {
-  ThemeManager::Instance().SetTheme(ThemeType::DARK);
-}
-
-void MainWindow::OnThemeChanged(ThemeType new_theme) {
   // Apply theme to all widgets
   ThemeManager::Instance().ApplyThemeToApplication(qApp);
   
@@ -1499,6 +1508,23 @@ void MainWindow::OnThemeChanged(ThemeType new_theme) {
     // This will be implemented in Phase 3
   }
 }
+
+void MainWindow::SwitchToDarkTheme() {
+  ThemeManager::Instance().SetTheme(ThemeType::DARK);
+  // Apply theme to all widgets
+  ThemeManager::Instance().ApplyThemeToApplication(qApp);
+  
+  // Update action states
+  UpdateThemeActionStates();
+  
+  // Update 3D viewer background if needed
+  if (model_viewer_widget_) {
+    // The 3D viewer will need special handling for theme changes
+    // This will be implemented in Phase 3
+  }
+}
+
+
 
 void MainWindow::UpdateThemeActionStates() {
   ThemeType current_theme = ThemeManager::Instance().GetCurrentTheme();

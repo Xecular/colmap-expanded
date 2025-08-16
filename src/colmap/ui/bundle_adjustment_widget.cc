@@ -106,8 +106,27 @@ void BundleAdjustmentWidget::Run() {
 
   auto thread = std::make_unique<ControllerThread<BundleAdjustmentController>>(
       std::make_shared<BundleAdjustmentController>(*options_, reconstruction_));
+  
+  // Add progress callback for better logging
   thread->AddCallback(Thread::FINISHED_CALLBACK,
                       [this]() { render_action_->trigger(); });
+  
+  // Add progress callback for detailed logging
+  thread->AddCallback(Thread::STARTED_CALLBACK, [this]() {
+    LOG(INFO) << "=== Bundle Adjustment Started ===";
+    LOG(INFO) << "Initial reconstruction statistics:";
+    LOG(INFO) << "  - Images: " << reconstruction_->NumImages();
+    LOG(INFO) << "  - Points3D: " << reconstruction_->NumPoints3D();
+    LOG(INFO) << "  - Observations: " << reconstruction_->NumObservations();
+  });
+  
+  thread->AddCallback(Thread::FINISHED_CALLBACK, [this]() {
+    LOG(INFO) << "=== Bundle Adjustment Completed ===";
+    LOG(INFO) << "Final reconstruction statistics:";
+    LOG(INFO) << "  - Images: " << reconstruction_->NumImages();
+    LOG(INFO) << "  - Points3D: " << reconstruction_->NumPoints3D();
+    LOG(INFO) << "  - Observations: " << reconstruction_->NumObservations();
+  });
 
   // Normalize scene for numerical stability and
   // to avoid large scale changes in viewer.
