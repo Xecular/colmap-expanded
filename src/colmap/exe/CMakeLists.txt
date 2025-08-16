@@ -47,6 +47,11 @@ if(GUI_ENABLED)
     )
 endif()
 
+# Add ML library
+list(APPEND OPTIONAL_LIBS
+    colmap_ml
+)
+
 COLMAP_ADD_LIBRARY(
     NAME colmap_exe
     SRCS

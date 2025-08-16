@@ -14,26 +14,36 @@ QMainWindow {
     color: #f8f9fa;
 }
 
+/* All Widgets - ensure background is applied */
+QWidget {
+    background-color: #212529;
+    color: #f8f9fa;
+}
+
 /* Menu Bar */
 QMenuBar {
     background-color: #343a40;
     color: #f8f9fa;
     border-bottom: 1px solid #495057;
-    padding: 2px;
+    padding: 4px;
+    min-height: 24px;
 }
 
 QMenuBar::item {
     background-color: transparent;
-    padding: 4px 8px;
-    border-radius: 3px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    margin: 1px;
 }
 
 QMenuBar::item:selected {
     background-color: #495057;
+    color: #ffffff;
 }
 
 QMenuBar::item:pressed {
     background-color: #6c757d;
+    color: #ffffff;
 }
 
 /* Menu */
@@ -42,16 +52,19 @@ QMenu {
     color: #f8f9fa;
     border: 1px solid #495057;
     border-radius: 4px;
-    padding: 4px;
+    padding: 6px;
+    min-width: 120px;
 }
 
 QMenu::item {
-    padding: 6px 20px;
-    border-radius: 3px;
+    padding: 8px 24px;
+    border-radius: 4px;
+    margin: 1px;
 }
 
 QMenu::item:selected {
     background-color: #495057;
+    color: #ffffff;
 }
 
 QMenu::separator {
@@ -589,10 +602,4 @@ QFrame {
     background-color: #343a40;
     color: #f8f9fa;
     border: 1px solid #495057;
-}
-
-/* Widget */
-QWidget {
-    background-color: #212529;
-    color: #f8f9fa;
 }

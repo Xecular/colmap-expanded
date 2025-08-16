@@ -221,6 +221,8 @@ if(GUI_ENABLED)
 
         # Enable automatic compilation of Qt resource files.
         set(CMAKE_AUTORCC ON)
+        # Enable automatic MOC processing for Qt classes with Q_OBJECT.
+        set(CMAKE_AUTOMOC ON)
     endif()
 endif()
 
