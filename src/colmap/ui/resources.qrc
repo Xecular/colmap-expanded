@@ -8,6 +8,9 @@
     <file>shaders/triangles.v.glsl</file>
     <file>shaders/triangles.f.glsl</file>
 
+    <file>stylesheets/light.qss</file>
+    <file>stylesheets/dark.qss</file>
+
     <file>media/project-new.png</file>
     <file>media/project-open.png</file>
     <file>media/project-edit.png</file>

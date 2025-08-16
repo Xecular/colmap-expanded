@@ -47,6 +47,7 @@
 #include "colmap/ui/reconstruction_options_widget.h"
 #include "colmap/ui/reconstruction_stats_widget.h"
 #include "colmap/ui/render_options_widget.h"
+#include "colmap/ui/theme_manager.h"
 #include "colmap/ui/undistortion_widget.h"
 #include "colmap/util/controller_thread.h"
 
@@ -144,6 +145,12 @@ class MainWindow : public QMainWindow {
 
   void UpdateWindowTitle();
 
+  // Theme management
+  void InitializeTheme();
+  void SwitchToLightTheme();
+  void SwitchToDarkTheme();
+  void OnThemeChanged(ThemeType new_theme);
+
   OptionManager options_;
 
   std::shared_ptr<ReconstructionManager> reconstruction_manager_;
@@ -231,6 +238,10 @@ class MainWindow : public QMainWindow {
   QAction* action_documentation_;
   QAction* action_support_;
   QAction* action_license_;
+
+  // Theme actions
+  QAction* action_light_theme_;
+  QAction* action_dark_theme_;
 
   std::vector<QAction*> blocking_actions_;
 

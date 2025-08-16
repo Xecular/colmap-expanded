@@ -59,6 +59,8 @@ MainWindow::MainWindow(const OptionManager& options)
   CreateStatusbar();
   CreateControllers();
 
+  InitializeTheme();
+
   ShowLog();
 
   options_.AddAllOptions();
@@ -478,6 +480,24 @@ void MainWindow::CreateActions() {
   action_license_ = new QAction(tr("License"), this);
   connect(
       action_license_, &QAction::triggered, license_widget_, &QTextEdit::show);
+
+  //////////////////////////////////////////////////////////////////////////////
+  // Theme actions
+  //////////////////////////////////////////////////////////////////////////////
+
+  action_light_theme_ = new QAction(tr("Light Theme"), this);
+  action_light_theme_->setCheckable(true);
+  connect(action_light_theme_,
+          &QAction::triggered,
+          this,
+          &MainWindow::SwitchToLightTheme);
+
+  action_dark_theme_ = new QAction(tr("Dark Theme"), this);
+  action_dark_theme_->setCheckable(true);
+  connect(action_dark_theme_,
+          &QAction::triggered,
+          this,
+          &MainWindow::SwitchToDarkTheme);
 }
 
 void MainWindow::CreateMenus() {
@@ -541,6 +561,11 @@ void MainWindow::CreateMenus() {
   extras_menu->addAction(action_reset_options_);
   extras_menu->addAction(action_set_log_level_);
   menuBar()->addAction(extras_menu->menuAction());
+
+  QMenu* theme_menu = new QMenu(tr("Theme"), this);
+  theme_menu->addAction(action_light_theme_);
+  theme_menu->addAction(action_dark_theme_);
+  menuBar()->addAction(theme_menu->menuAction());
 
   QMenu* help_menu = new QMenu(tr("Help"), this);
   help_menu->addAction(action_about_);
@@ -1437,6 +1462,49 @@ void MainWindow::UpdateWindowTitle() {
     }
     setWindowTitle(QString::fromStdString("COLMAP - " + project_title));
   }
+}
+
+void MainWindow::InitializeTheme() {
+  // Connect to theme manager signals
+  connect(&ThemeManager::Instance(),
+          &ThemeManager::ThemeChanged,
+          this,
+          &MainWindow::OnThemeChanged);
+
+  // Apply current theme to application
+  ThemeManager::Instance().ApplyThemeToApplication(qApp);
+
+  // Update action states based on current theme
+  UpdateThemeActionStates();
+}
+
+void MainWindow::SwitchToLightTheme() {
+  ThemeManager::Instance().SetTheme(ThemeType::LIGHT);
+}
+
+void MainWindow::SwitchToDarkTheme() {
+  ThemeManager::Instance().SetTheme(ThemeType::DARK);
+}
+
+void MainWindow::OnThemeChanged(ThemeType new_theme) {
+  // Apply theme to all widgets
+  ThemeManager::Instance().ApplyThemeToApplication(qApp);
+  
+  // Update action states
+  UpdateThemeActionStates();
+  
+  // Update 3D viewer background if needed
+  if (model_viewer_widget_) {
+    // The 3D viewer will need special handling for theme changes
+    // This will be implemented in Phase 3
+  }
+}
+
+void MainWindow::UpdateThemeActionStates() {
+  ThemeType current_theme = ThemeManager::Instance().GetCurrentTheme();
+  
+  action_light_theme_->setChecked(current_theme == ThemeType::LIGHT);
+  action_dark_theme_->setChecked(current_theme == ThemeType::DARK);
 }
 
 }  // namespace colmap
